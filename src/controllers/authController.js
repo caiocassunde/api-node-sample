@@ -18,7 +18,6 @@ router.get('/register/get-email', async (req, res) => {
     }
 });
 
-
 router.post('/register', async (req, res) => {
     try{
         const {email} = req.body;
@@ -49,6 +48,28 @@ router.delete('/register/delete-email/:email', async (req, res) => {
         }
     }catch(err){
         return res.status(400).send({error: 'DELETE Failed'});
+    }
+});
+
+router.get('/call-api', async (req, res) => {
+    const request = require('request')
+    options = {
+        uri: `https://pokeapi.co/api/v2`,
+        method: 'GET',
+        href: '',
+        pathname: '/pokemon/1/'
+    };
+    try{
+        request(options, function (err, resp, body){
+            if(err != null){
+                if(err.errno == 'ENOTFOUND'){
+                    throw new Error('Conection Failed');
+                }
+            }
+            return res.send(JSON.parse(body).ability);      
+        });
+    }catch(Error){
+        return res.status(500).send({error: Error});
     }
 });
 
